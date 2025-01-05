@@ -9,6 +9,7 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controller = TextEditingController();
   List toDoList =[
     ['Talentio assesment',false],
     ['Writing',false],
@@ -19,7 +20,12 @@ class _HomePageState extends State<HomePage> {
       toDoList[index][1] = !toDoList[index][1];
     });
   }
-
+  void deleteTask(int index)
+  {
+    setState(() {
+      toDoList.removeAt(index);
+    });
+  }
   @override
 Widget build(BuildContext context){
     return Scaffold(
@@ -33,6 +39,7 @@ Widget build(BuildContext context){
             taskName: toDoList[index][0],
             taskCompleted: toDoList[index][1],
             onChanged: (value) => checkBoxChanged(index),
+            deleteFunction: (context) => deleteTask(index),
           );
         },),
         floatingActionButton: Row(
@@ -42,6 +49,7 @@ Widget build(BuildContext context){
                 horizontal: 25,
               ),
               child: TextField(
+                controller: _controller,
                 decoration: InputDecoration(
                   hintText: 'Add new todo task',
                   filled: true,
@@ -62,12 +70,20 @@ Widget build(BuildContext context){
                 style: const TextStyle(color: Colors.white),
               ),
             )),
-            FloatingActionButton(
-            onPressed: (){},
-            child: Icon(Icons.add),
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+              child: FloatingActionButton(
+              onPressed: (){
+                setState(() {
+                  toDoList.add([_controller.text,false]);
+                  _controller.clear();
+                });
+              },
+              child: Icon(Icons.add),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
     ),
+            ),
           ],
         ),
     );
